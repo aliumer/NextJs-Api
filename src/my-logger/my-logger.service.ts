@@ -5,6 +5,7 @@ import * as path from 'path';
 
 @Injectable()
 export class MyLoggerService extends ConsoleLogger {
+
     log(message: unknown, context?: unknown): void {
         const entry = `${context}\t${message}`;
         this.logToFile(entry);
@@ -18,11 +19,14 @@ export class MyLoggerService extends ConsoleLogger {
     }
 
     async logToFile(entry) {
-        const formattedEntry = `${Intl.DateTimeFormat('en-US', {
-            dateStyle: 'short',
-            timeStyle: 'short',
-            timeZone: 'America/Chicago',
-        }).format(new Date())}\t${entry}}`;
+        const formattedDate = Intl.DateTimeFormat('en-US',
+            {
+                dateStyle: 'short',
+                timeStyle: 'short',
+                timeZone: 'America/Chicago'
+            }
+        ).format(new Date());
+        const formattedEntry = `${formattedDate}\t${entry}\r\n`;
 
         try {
             if (!fs.existsSync(path.join(__dirname, '..', '..', 'logs'))) {
